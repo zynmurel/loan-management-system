@@ -18,3 +18,73 @@ model Post {
 
     @@index([name])
 }
+
+model Admin {
+    id        Int      @id @default(autoincrement())
+    name      String   @unique
+    type      String
+    username  String   @unique
+    password  String
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+}
+
+model Borrower {
+    id         Int      @id @default(autoincrement())
+    firstName  String
+    lastName   String
+    middleName String
+    status     String
+    contact    String   @unique
+    address    String
+    email      String   @unique
+    taxNo      String
+    password   String
+    createdAt  DateTime @default(now())
+    updatedAt  DateTime @updatedAt
+    Loans      Loans[]
+}
+
+model LoanTypes {
+    id          Int      @id @default(autoincrement())
+    name        String
+    description String
+    createdAt   DateTime @default(now())
+    updatedAt   DateTime @updatedAt
+    Loans       Loans[]
+}
+
+model LoanPlans {
+    id        Int      @id @default(autoincrement())
+    planMonth Int
+    interest  Float
+    penalty   Float
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+    Loans     Loans[]
+}
+
+model Payment {
+    id        Int      @id @default(autoincrement())
+    amount    Float
+    penalty   Float
+    loanId    Int
+    month     String
+    Loan      Loans    @relation(fields: [loanId], references: [id])
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+}
+
+model Loans {
+    id         Int       @id @default(autoincrement())
+    amount     Float
+    borrowerId Int
+    Borrower   Borrower  @relation(fields: [borrowerId], references: [id])
+    loanPlanId Int
+    LoanPlan   LoanPlans @relation(fields: [loanPlanId], references: [id])
+    loanTypeId Int
+    LoanType   LoanTypes @relation(fields: [loanTypeId], references: [id])
+    createdAt  DateTime  @default(now())
+    updatedAt  DateTime  @updatedAt
+    Payment    Payment[]
+}
