@@ -80,7 +80,12 @@ const AdminLayout = ({ children }: { children: React.ReactNode }) => {
     clearstorage().then(() => router.push("/"));
   };
   const isSuper = localStorage.getItem("adminType") === "super_admin";
-  const siderItems = getSiderItems(isSuper);
+  const siderItems = getSiderItems(isSuper) as {
+    icon: JSX.Element;
+    title: string;
+    url: string;
+    key: string;
+  }[];
   const userId = localStorage.getItem("userId");
   const { data: admin } = api.admin.getAdmin.useQuery({
     id: userId ? parseInt(userId) : 0,
@@ -122,7 +127,7 @@ const AdminLayout = ({ children }: { children: React.ReactNode }) => {
             >
               <div className=" flex h-10 cursor-pointer items-center justify-center gap-2 rounded border border-gray-200 p-2 text-lg text-gray-800 hover:bg-slate-200 ">
                 <div className=" flex flex-row items-center text-sm">
-                  {headerContent.title}{" "}
+                  {isSuper ? "Super Admin" : headerContent.title}{" "}
                   <div className=" flex flex-row items-center text-base">
                     <BsDot />
                     <div className=" text-xs uppercase text-green-600">
