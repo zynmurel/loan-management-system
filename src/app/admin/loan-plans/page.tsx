@@ -6,7 +6,7 @@ import { useEffect, useState } from "react";
 import toast, { Toaster } from "react-hot-toast";
 import { api } from "~/trpc/react";
 
-const LoanType = () => {
+const LoanPlan = () => {
   const [form] = Form.useForm();
   const [form2] = Form.useForm();
   const [activeLoanPlan, setActiveLoanPlan] = useState<any>(null);
@@ -351,4 +351,4 @@ const LoanType = () => {
   );
 };
 
-export default LoanType;
+export default LoanPlan;

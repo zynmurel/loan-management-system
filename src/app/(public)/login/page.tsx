@@ -61,7 +61,7 @@ const LoginPage = () => {
         className=" flex w-72 flex-col"
       >
         <Form.Item name={"username"} rules={[{ required: true }]}>
-          <Input size="large" placeholder="Username or Email " />
+          <Input size="large" placeholder="Username / Email / Phone " />
         </Form.Item>
         <Form.Item name={"password"} rules={[{ required: true }]}>
           <Input.Password size="large" placeholder="Password" />

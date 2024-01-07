@@ -16,7 +16,7 @@ interface DataType {
   address: string;
 }
 
-const LoanType = () => {
+const AdminAccountsPage = () => {
   const [form] = Form.useForm();
   const [form2] = Form.useForm();
   const [activeAdmin, setActiveAdmin] = useState<any>(null);
@@ -66,6 +66,19 @@ const LoanType = () => {
         toast.success("Admin details edited!");
         setActiveAdmin(null);
       },
+      onError: () => {
+        toast.error("This admin name or username is already used");
+        form2.setFields([
+          {
+            name: "name",
+            errors: [""],
+          },
+          {
+            name: "username",
+            errors: [""],
+          },
+        ]);
+      },
     });
 
   const { data, refetch } = api.admin.getAllAdmin.useQuery({
@@ -103,7 +116,7 @@ const LoanType = () => {
       data,
     });
   };
-  const onDeleteLoanType = () => {
+  const onDeleteAdmin = () => {
     deleteAdmin({
       id: activeAdmin.data.id,
     });
@@ -240,6 +253,90 @@ const LoanType = () => {
           </div>
         </div>
       </Modal>
+      <Modal
+        title="Delete"
+        open={activeAdmin?.type === "delete"}
+        onCancel={onCloseModal}
+        width={350}
+        footer={[]}
+      >
+        {activeAdmin?.data &&
+          (activeAdmin?.data.type === "super_admin" ||
+          activeAdmin?.data.id == adminId ? (
+            <div>You can't delete Super Admin Account</div>
+          ) : (
+            <div>
+              <div className=" flex flex-col">
+                <div>Are you sure you want to delete this Admin?</div>
+                <div className=" mt-3 flex flex-row gap-2">
+                  <button
+                    onClick={onDeleteAdmin}
+                    className="  flex-1 rounded bg-red-500 py-1 text-white"
+                  >
+                    Delete
+                  </button>
+                  <button
+                    onClick={onCloseModal}
+                    className="  flex-1 rounded border bg-white py-1 text-gray-700"
+                  >
+                    Cancel
+                  </button>
+                </div>
+              </div>
+            </div>
+          ))}
+      </Modal>
+      <Modal
+        title="Edit"
+        open={activeAdmin?.type === "edit"}
+        onCancel={onCloseModal}
+        width={350}
+        footer={[]}
+      >
+        {activeAdmin?.data && (
+          <div>
+            <Form
+              form={form2}
+              name="basic"
+              onFinish={onFinishEdit}
+              autoComplete="off"
+              className=" flex w-full flex-col"
+            >
+              <div className=" mb-2 mt-2 text-sm text-gray-500">Admin Name</div>
+              <Form.Item
+                name={"name"}
+                rules={[{ required: true, message: "Admin name is blank" }]}
+              >
+                <Input size="large" placeholder="Input admin assigned name" />
+              </Form.Item>
+              <div className=" mb-2 mt-2 text-sm text-gray-500">Username</div>
+              <Form.Item
+                name={"username"}
+                rules={[{ required: true, message: "Username is blank" }]}
+              >
+                <Input size="large" placeholder="Input admin username" />
+              </Form.Item>
+              <div className=" mb-2 mt-2 text-sm text-gray-500">Password</div>
+              <Form.Item
+                name={"password"}
+                rules={[{ required: true, message: "Password is blank" }]}
+              >
+                <Input.Password
+                  size="large"
+                  placeholder="Input admin password"
+                />
+              </Form.Item>
+              <button
+                type="submit"
+                disabled={createIsLoading}
+                className="h-10 w-full rounded border border-cyan-600 bg-blue-500 text-lg text-white hover:brightness-110"
+              >
+                {createIsLoading ? "Submitting ..." : "Submit"}
+              </button>
+            </Form>
+          </div>
+        )}
+      </Modal>
       <div className=" flex flex-1 flex-col">
         <div className=" mb-5 flex flex-row justify-between gap-3 text-2xl text-gray-500">
           Admin Accounts
@@ -272,103 +369,10 @@ const LoanType = () => {
             columns={columns}
             dataSource={data}
           />
-          <Modal
-            title="Delete"
-            open={activeAdmin?.type === "delete"}
-            onCancel={onCloseModal}
-            width={350}
-            footer={[]}
-          >
-            {activeAdmin?.data &&
-              (activeAdmin?.data.type === "super_admin" ||
-              activeAdmin?.data.id == adminId ? (
-                <div>You can't delete Super Admin Account</div>
-              ) : (
-                <div>
-                  <div className=" flex flex-col">
-                    <div>Are you sure you want to delete this Admin?</div>
-                    <div className=" mt-3 flex flex-row gap-2">
-                      <button
-                        onClick={onDeleteLoanType}
-                        className="  flex-1 rounded bg-red-500 py-1 text-white"
-                      >
-                        Delete
-                      </button>
-                      <button
-                        onClick={onCloseModal}
-                        className="  flex-1 rounded border bg-white py-1 text-gray-700"
-                      >
-                        Cancel
-                      </button>
-                    </div>
-                  </div>
-                </div>
-              ))}
-          </Modal>
-          <Modal
-            title="Edit"
-            open={activeAdmin?.type === "edit"}
-            onCancel={onCloseModal}
-            width={350}
-            footer={[]}
-          >
-            {activeAdmin?.data && (
-              <div>
-                <Form
-                  form={form2}
-                  name="basic"
-                  onFinish={onFinishEdit}
-                  autoComplete="off"
-                  className=" flex w-full flex-col"
-                >
-                  <div className=" mb-2 mt-2 text-sm text-gray-500">
-                    Admin Name
-                  </div>
-                  <Form.Item
-                    name={"name"}
-                    rules={[{ required: true, message: "Admin name is blank" }]}
-                  >
-                    <Input
-                      size="large"
-                      placeholder="Input admin assigned name"
-                    />
-                  </Form.Item>
-                  <div className=" mb-2 mt-2 text-sm text-gray-500">
-                    Username
-                  </div>
-                  <Form.Item
-                    name={"username"}
-                    rules={[{ required: true, message: "Username is blank" }]}
-                  >
-                    <Input size="large" placeholder="Input admin username" />
-                  </Form.Item>
-                  <div className=" mb-2 mt-2 text-sm text-gray-500">
-                    Password
-                  </div>
-                  <Form.Item
-                    name={"password"}
-                    rules={[{ required: true, message: "Password is blank" }]}
-                  >
-                    <Input.Password
-                      size="large"
-                      placeholder="Input admin password"
-                    />
-                  </Form.Item>
-                  <button
-                    type="submit"
-                    disabled={createIsLoading}
-                    className="h-10 w-full rounded border border-cyan-600 bg-blue-500 text-lg text-white hover:brightness-110"
-                  >
-                    {createIsLoading ? "Submitting ..." : "Submit"}
-                  </button>
-                </Form>
-              </div>
-            )}
-          </Modal>
         </div>
       </div>
     </div>
   );
 };
 
-export default LoanType;
+export default AdminAccountsPage;
