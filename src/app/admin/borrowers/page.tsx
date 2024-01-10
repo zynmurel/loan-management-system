@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/prefer-for-of */
 "use client";
 import { Card, Form, Input, Modal, Table } from "antd";
 import { useEffect, useState } from "react";
@@ -6,6 +7,7 @@ import { api } from "~/trpc/react";
 import { IoMdAdd } from "react-icons/io";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
 import BorrowerAccounts from "./components/BorrowerAccounts";
+import ImageUpload from "./components/imageUpload";
 
 const Borrowers = () => {
   const [form] = Form.useForm();
@@ -15,6 +17,8 @@ const Borrowers = () => {
   const [showPassId, setShowPassId] = useState(0);
   const [searchText, setSearchText] = useState("");
   const [activeTabKey1, setActiveTabKey1] = useState<string>("approved");
+  const [imageUrl, setImageUrl] = useState<string | null>(null)
+  const [imageFile, setImageFile] = useState<any>(null)
 
   const onTab1Change = (key: string) => {
     setActiveTabKey1(key);
@@ -68,11 +72,12 @@ const Borrowers = () => {
     taxNo: string;
     password: string;
   }) => {
-    createAccount({
-      ...e,
-      imageBase64: "sample",
-      status: "approved",
-    });
+    // createAccount({
+    //   ...e,
+    //   imageBase64: "sample",
+    //   status: "approved",
+    // });
+    console.log({ ...e })
   };
   //dooonnneeee upp
   const { mutate: deleteBorrower, isLoading: deleteIsLoading } =
@@ -248,6 +253,8 @@ const Borrowers = () => {
               autoComplete="off"
               className=" flex w-full flex-col"
             >
+              <div>Borrower's Photo</div>
+              <ImageUpload imageUrl={imageUrl} setImageUrl={setImageUrl} imageFile={imageFile} setImageFile={setImageFile} form={form} />
               <div>Borrower's Name</div>
               <div className=" flex w-full flex-row gap-1">
                 <Form.Item name={"firstName"} rules={[{ required: true }]}>

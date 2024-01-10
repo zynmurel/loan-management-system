@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/prefer-for-of */
 "use client";
 import { Form, Input, Modal, Table } from "antd";
 import Search from "antd/es/input/Search";
@@ -10,10 +11,12 @@ import { FaEye, FaEyeSlash } from "react-icons/fa";
 
 interface DataType {
   id: number;
-  key: React.Key;
   name: string;
-  age: number;
-  address: string;
+  type: string;
+  username: string;
+  password: string;
+  createdAt: Date;
+  updatedAt: Date;
 }
 
 const AdminAccountsPage = () => {
@@ -262,7 +265,7 @@ const AdminAccountsPage = () => {
       >
         {activeAdmin?.data &&
           (activeAdmin?.data.type === "super_admin" ||
-          activeAdmin?.data.id == adminId ? (
+            activeAdmin?.data.id == adminId ? (
             <div>You can't delete Super Admin Account</div>
           ) : (
             <div>
