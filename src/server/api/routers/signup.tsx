@@ -15,6 +15,7 @@ export const signUpRouter = createTRPCRouter({
         contact: z.string(),
         taxNo: z.string(),
         password: z.string(),
+        imageBase64: z.string(),
       }),
     )
     .mutation(async ({ ctx, input }) => {

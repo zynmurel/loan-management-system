@@ -3,10 +3,17 @@ import { Form, Input } from "antd";
 import { api } from "~/trpc/react";
 import toast from "react-hot-toast";
 import { useRouter } from "next/navigation";
+import ImageUpload from "~/app/admin/borrowers/components/imageUpload";
+import { imageDB } from "~/app/_utils/firebase/firebaseupload";
+import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
+import { v4 } from "uuid";
+import { useState } from "react";
 
 const LoginPage = () => {
   const router = useRouter();
   const [form] = Form.useForm();
+  const [imageFile, setImageFile] = useState<any>(null);
+  const [submitLoading, setSubmitLoading] = useState(false);
   const loginLocalStorage = (user: string, id: number) => {
     localStorage.setItem("userType", user),
       localStorage.setItem("userId", id.toString());
@@ -17,6 +24,7 @@ const LoginPage = () => {
       form.resetFields();
       loginLocalStorage("borrower", data.id);
       router.refresh();
+      setSubmitLoading(false);
     },
     onError: (error) => {
       toast.error(error.message);
@@ -30,10 +38,40 @@ const LoginPage = () => {
           errors: [""],
         },
       ]);
+      setSubmitLoading(false);
     },
   });
-  const onLogin = (e: any) => {
-    registration.mutateAsync({ ...e });
+  const handleUpload = async () => {
+    if (imageFile !== null) {
+      const imageRef = ref(imageDB, `loanManagementSystem/${v4()}`);
+      return uploadBytes(imageRef, imageFile).then((val) => {
+        return getDownloadURL(val.ref).then((url) => {
+          return url;
+        });
+      });
+    } else {
+      return null;
+    }
+  };
+  const onLogin = async (e: any) => {
+    setSubmitLoading(true);
+    await handleUpload().then((imageUrl) => {
+      if (!imageUrl) {
+        form.setFields([
+          {
+            name: "imageBase64",
+            errors: ["Photo required"],
+          },
+        ]);
+        setSubmitLoading(false);
+      } else {
+        registration.mutateAsync({
+          ...e,
+          imageBase64: imageUrl,
+          status: "approved",
+        });
+      }
+    });
   };
   return (
     <div className=" z-20 flex flex-col items-center justify-center rounded p-5">
@@ -51,6 +89,8 @@ const LoginPage = () => {
         autoComplete="off"
         className=" flex w-auto flex-col text-lg text-white"
       >
+        <div>Borrower's Photo</div>
+        <ImageUpload setImageFile={setImageFile} />
         <div>Borrower's Name</div>
         <div className=" flex w-full flex-row gap-1">
           <Form.Item name={"firstName"} rules={[{ required: true }]}>
@@ -87,7 +127,7 @@ const LoginPage = () => {
           type="submit"
           className="h-10 w-full rounded-full border border-cyan-600 bg-cyan-300 text-lg text-cyan-800 hover:brightness-110"
         >
-          Register
+          {submitLoading ? "Loading..." : "Register"}
         </button>
       </Form>
       <div className=" mt-3  text-cyan-300">

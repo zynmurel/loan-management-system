@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/prefer-for-of */
 "use client";
-import { Card, Form, Input, Modal, Table } from "antd";
+import { Card, Form, Image, Input, Modal, Table } from "antd";
 import { useEffect, useState } from "react";
 import toast, { Toaster } from "react-hot-toast";
 import { api } from "~/trpc/react";
@@ -8,6 +8,9 @@ import { IoMdAdd } from "react-icons/io";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
 import BorrowerAccounts from "./components/BorrowerAccounts";
 import ImageUpload from "./components/imageUpload";
+import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
+import { imageDB } from "~/app/_utils/firebase/firebaseupload";
+import { v4 } from "uuid";
 
 const Borrowers = () => {
   const [form] = Form.useForm();
@@ -17,8 +20,9 @@ const Borrowers = () => {
   const [showPassId, setShowPassId] = useState(0);
   const [searchText, setSearchText] = useState("");
   const [activeTabKey1, setActiveTabKey1] = useState<string>("approved");
-  const [imageUrl, setImageUrl] = useState<string | null>(null)
-  const [imageFile, setImageFile] = useState<any>(null)
+  const [imageUrl, setImageUrl] = useState<string | null>(null);
+  const [imageFile, setImageFile] = useState<any>(null);
+  const [submitLoading, setSubmitLoading] = useState(false);
 
   const onTab1Change = (key: string) => {
     setActiveTabKey1(key);
@@ -34,6 +38,7 @@ const Borrowers = () => {
         refetchApprovedBorrowers();
         setAddModal(false);
         toast.success("Borrower added!");
+        setSubmitLoading(false);
       },
       onError: () => {
         toast.error("This borrowers email or phone number is already used");
@@ -47,6 +52,7 @@ const Borrowers = () => {
             errors: [""],
           },
         ]);
+        setSubmitLoading(false);
       },
     });
 
@@ -60,7 +66,7 @@ const Borrowers = () => {
       searchText,
       status: "pending",
     });
-  const onFinish = (e: {
+  const onFinish = async (e: {
     imageBase64: string;
     firstName: string;
     middleName: string;
@@ -72,12 +78,24 @@ const Borrowers = () => {
     taxNo: string;
     password: string;
   }) => {
-    // createAccount({
-    //   ...e,
-    //   imageBase64: "sample",
-    //   status: "approved",
-    // });
-    console.log({ ...e })
+    setSubmitLoading(true);
+    await handleUpload().then((imageUrl) => {
+      if (!imageUrl) {
+        form.setFields([
+          {
+            name: "imageBase64",
+            errors: ["Photo required"],
+          },
+        ]);
+        setSubmitLoading(false);
+      } else {
+        createAccount({
+          ...e,
+          imageBase64: imageUrl,
+          status: "approved",
+        });
+      }
+    });
   };
   //dooonnneeee upp
   const { mutate: deleteBorrower, isLoading: deleteIsLoading } =
@@ -106,6 +124,7 @@ const Borrowers = () => {
         refetchApprovedBorrowers();
         toast.success("Borrower details edited!");
         setActiveBorrower(null);
+        setSubmitLoading(false);
       },
       onError: () => {
         toast.error("This borrowers email or phone number is already used");
@@ -119,9 +138,10 @@ const Borrowers = () => {
             errors: [""],
           },
         ]);
+        setSubmitLoading(false);
       },
     });
-  const onFinishEdit = (e: {
+  const onFinishEdit = async (e: {
     imageBase64: string;
     firstName: string;
     middleName: string;
@@ -133,14 +153,37 @@ const Borrowers = () => {
     taxNo: string;
     password: string;
   }) => {
-    editBorrower({
-      ...e,
-      imageBase64: "sample",
-      id: activeBorrower.data.id,
-    });
+    setSubmitLoading(true);
+    if (!imageUrl) {
+      console.log("sample");
+      await handleUpload().then((imageUrl) => {
+        if (!imageUrl) {
+          form2.setFields([
+            {
+              name: "imageBase64",
+              errors: ["Photo required"],
+            },
+          ]);
+          setSubmitLoading(false);
+        } else {
+          editBorrower({
+            ...e,
+            imageBase64: imageUrl,
+            id: activeBorrower.data.id,
+          });
+        }
+      });
+    } else {
+      editBorrower({
+        ...e,
+        imageBase64: activeBorrower.data.imageBase64,
+        id: activeBorrower.data.id,
+      });
+    }
   };
   const onCloseModal = () => {
     setActiveBorrower(null);
+    setImageUrl(null);
   };
   const onCloseAddAdminModal = () => {
     setAddModal(false);
@@ -190,8 +233,8 @@ const Borrowers = () => {
   useEffect(() => {
     if (activeBorrower?.data) {
       const data = activeBorrower.data;
+      setImageUrl(data.imageBase64);
       form2.setFieldsValue({
-        imageBase64: data.imageBase64,
         firstName: data.firstName,
         middleName: data.middleName,
         lastName: data.lastName,
@@ -213,6 +256,23 @@ const Borrowers = () => {
       tab: "For Approval Borrowers",
     },
   ];
+
+  const handleUpload = async () => {
+    if (imageFile !== null) {
+      try {
+        const imageRef = ref(imageDB, `loanManagementSystem/${v4()}`);
+        return uploadBytes(imageRef, imageFile).then((val) => {
+          return getDownloadURL(val.ref).then((url) => {
+            return url;
+          });
+        });
+      } catch (e) {
+        return null;
+      }
+    } else {
+      return null;
+    }
+  };
   const contentList: Record<string, React.ReactNode> = {
     approved: (
       <BorrowerAccounts
@@ -254,7 +314,7 @@ const Borrowers = () => {
               className=" flex w-full flex-col"
             >
               <div>Borrower's Photo</div>
-              <ImageUpload imageUrl={imageUrl} setImageUrl={setImageUrl} imageFile={imageFile} setImageFile={setImageFile} form={form} />
+              <ImageUpload setImageFile={setImageFile} />
               <div>Borrower's Name</div>
               <div className=" flex w-full flex-row gap-1">
                 <Form.Item name={"firstName"} rules={[{ required: true }]}>
@@ -289,10 +349,12 @@ const Borrowers = () => {
               </Form.Item>
               <button
                 type="submit"
-                disabled={createIsLoading}
+                disabled={createIsLoading || submitLoading}
                 className="h-10 w-full rounded border border-cyan-600 bg-blue-500 text-lg text-white hover:brightness-110"
               >
-                {createIsLoading ? "Adding ..." : "Add Borrower"}
+                {createIsLoading || submitLoading
+                  ? "Adding ..."
+                  : "Add Borrower"}
               </button>
             </Form>
           </div>
@@ -372,6 +434,28 @@ const Borrowers = () => {
               autoComplete="off"
               className=" flex w-full flex-col"
             >
+              <div>Borrower's Photo</div>
+              {!imageUrl ? (
+                <>
+                  <ImageUpload setImageFile={setImageFile} />
+                </>
+              ) : (
+                <div className=" flex w-full flex-col items-center justify-center gap-1">
+                  <Image
+                    width={200}
+                    alt="borrowers_image"
+                    src={imageUrl}
+                    className=" rounded"
+                  />
+                  <button
+                    type="button"
+                    className=" rounded border border-gray-900 p-1 px-4"
+                    onClick={() => setImageUrl(null)}
+                  >
+                    Change Photo
+                  </button>
+                </div>
+              )}
               <div>Borrower's Name</div>
               <div className=" flex w-full flex-row gap-1">
                 <Form.Item name={"firstName"} rules={[{ required: true }]}>
@@ -406,10 +490,10 @@ const Borrowers = () => {
               </Form.Item>
               <button
                 type="submit"
-                disabled={createIsLoading}
+                disabled={createIsLoading || submitLoading}
                 className="h-10 w-full rounded border border-cyan-600 bg-blue-500 text-lg text-white hover:brightness-110"
               >
-                {createIsLoading ? "Submitting ..." : "Submit"}
+                {createIsLoading || submitLoading ? "Submitting ..." : "Submit"}
               </button>
             </Form>
           </div>

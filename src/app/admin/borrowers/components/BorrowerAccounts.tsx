@@ -1,4 +1,4 @@
-import { Form, Input, Modal, Table } from "antd";
+import { Form, Image, Input, Modal, Table } from "antd";
 import Search from "antd/es/input/Search";
 import { ColumnsType } from "antd/es/table";
 import { IoMdAdd } from "react-icons/io";
@@ -16,17 +16,21 @@ const BorrowerAccounts = ({
       title: "ID",
       dataIndex: "id",
     },
+    activeTabKey1 === "pending"
+      ? {
+          title: "Photo",
+          align: "center",
+          dataIndex: "imageBase64",
+          render: (data: any) => (
+            <Image src={data} alt="borrower_photo" width={50} />
+          ),
+        }
+      : {},
     {
-      title: "First Name",
-      dataIndex: "firstName",
-    },
-    {
-      title: "Middle Name",
-      dataIndex: "middleName",
-    },
-    {
-      title: "Last Name",
-      dataIndex: "lastName",
+      title: "Name",
+      render: (data) => {
+        return `${data.firstName} ${data.middleName} ${data.lastName}`;
+      },
     },
     {
       title: "Tax No.",
@@ -88,11 +92,11 @@ const BorrowerAccounts = ({
                 Approve
               </button>
               {/* <button
-                    onClick={() => openModal("delete", data)}
-                    className=" flex-1 rounded bg-red-400 px-2 py-1 text-white"
-                  >
-                    Delete
-                  </button> */}
+                      onClick={() => openModal("delete", data)}
+                      className=" flex-1 rounded bg-red-400 px-2 py-1 text-white"
+                    >
+                      Delete
+                    </button> */}
             </div>
           ),
         }

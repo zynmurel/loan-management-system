@@ -30,7 +30,7 @@ const AdminHome = () => {
       color: "#40BCBC",
       data: "0",
       icon: <FaBook />,
-      link: "/admin",
+      link: "/admin/borrowers",
       linkText: "View Borrowers",
     },
   ];
