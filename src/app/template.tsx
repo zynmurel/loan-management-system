@@ -20,7 +20,7 @@ const RootTemplate = ({ children }: { children: React.ReactNode }) => {
       router.push("/borrower");
     }
   }, []);
-  return <>{children}</>;
+  return <div>{children}</div>;
 };
 
 export default RootTemplate;

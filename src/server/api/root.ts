@@ -6,6 +6,7 @@ import { loanTypeRouter } from "./routers/loan_type";
 import { loanPlanRouter } from "./routers/loan_plan";
 import { adminAccountsRouter } from "./routers/admins";
 import { borrowerRouter } from "./routers/borrower";
+import { loanRouter } from "./routers/loans";
 
 /**
  * This is the primary router for your server.
@@ -18,6 +19,7 @@ export const appRouter = createTRPCRouter({
   signup: signUpRouter,
   loanType: loanTypeRouter,
   loanPlan: loanPlanRouter,
+  loans: loanRouter,
   admin: adminAccountsRouter,
   borrower: borrowerRouter,
 });

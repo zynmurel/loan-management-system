@@ -14,7 +14,7 @@ const AdminHome = () => {
       color: "#517DF6",
       data: "0",
       icon: <FaCommentDollar />,
-      link: "/admin",
+      link: "/admin/loans",
       linkText: "View Loans",
     },
     {
@@ -22,7 +22,7 @@ const AdminHome = () => {
       color: "#3EB952",
       data: "P 0.00",
       icon: <FaCoins />,
-      link: "/admin",
+      link: "/admin/payments",
       linkText: "View Payments",
     },
     {
