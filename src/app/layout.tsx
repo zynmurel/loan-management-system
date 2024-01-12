@@ -8,6 +8,7 @@ import { Toaster } from "react-hot-toast";
 const inter = Inter({
   subsets: ["latin"],
   variable: "--font-sans",
+  display: "swap",
 });
 
 export const metadata = {
@@ -23,7 +24,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body className={`font-sans ${inter.variable}`}>
+      <body className={` font-sans ${inter.variable}`}>
         <TRPCReactProvider cookies={cookies().toString()}>
           <Toaster />
           {children}

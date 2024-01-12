@@ -281,7 +281,6 @@ const Borrowers = () => {
         setSearchText={setSearchText}
         borrowers={approvedBorrowers}
         activeTabKey1={activeTabKey1}
-        approveBorrower={approveBorrower}
       />
     ),
     pending: (
@@ -291,7 +290,6 @@ const Borrowers = () => {
         setSearchText={setSearchText}
         borrowers={pendingBorrowers}
         activeTabKey1={activeTabKey1}
-        approveBorrower={approveBorrower}
       />
     ),
   };

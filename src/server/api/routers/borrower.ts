@@ -20,10 +20,12 @@ export const borrowerRouter = createTRPCRouter({
       }),
     )
     .mutation(({ ctx, input }) => {
+      const randomId = Math.floor(100000000 + Math.random() * 900000000);
       try {
         const newBorrower = ctx.db.borrower.create({
           data: {
             ...input,
+            borrowerIdNo: randomId.toString(),
           },
         });
         return newBorrower;
@@ -47,19 +49,24 @@ export const borrowerRouter = createTRPCRouter({
         status: z.string(),
       }),
     )
-    .query(({ ctx, input }) => {
-      return ctx.db.borrower.findMany({
-        where: {
-          OR: [
-            { firstName: { contains: input.searchText } },
-            { middleName: { contains: input.searchText } },
-            { lastName: { contains: input.searchText } },
-            { contact: { contains: input.searchText } },
-            { email: { contains: input.searchText } },
-          ],
-          status: input.status,
-        },
-      });
+    .query(async ({ ctx, input }) => {
+      return await ctx.db.borrower
+        .findMany({
+          where: {
+            status: input.status,
+          },
+        })
+        .then((data) => {
+          return data.filter(
+            (dt) =>
+              `${dt.firstName} ${dt.middleName} ${dt.lastName}`
+                .toLowerCase()
+                .includes(input.searchText.toLowerCase()) ||
+              dt.borrowerIdNo.includes(input.searchText) ||
+              dt.contact.includes(input.searchText) ||
+              dt.email.includes(input.searchText),
+          );
+        });
     }),
 
   deleteBorrower: publicProcedure

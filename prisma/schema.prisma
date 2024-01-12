@@ -30,20 +30,21 @@ model Admin {
 }
 
 model Borrower {
-    id          Int      @id @default(autoincrement())
-    imageBase64 String
-    firstName   String
-    lastName    String
-    middleName  String
-    status      String
-    contact     String   @unique
-    address     String
-    email       String   @unique
-    taxNo       String
-    password    String
-    createdAt   DateTime @default(now())
-    updatedAt   DateTime @updatedAt
-    Loans       Loans[]
+    id           Int      @id @default(autoincrement())
+    borrowerIdNo String
+    imageBase64  String
+    firstName    String
+    lastName     String
+    middleName   String
+    status       String
+    contact      String   @unique
+    address      String
+    email        String   @unique
+    taxNo        String
+    password     String
+    createdAt    DateTime @default(now())
+    updatedAt    DateTime @updatedAt
+    Loans        Loans[]
 }
 
 model LoanTypes {

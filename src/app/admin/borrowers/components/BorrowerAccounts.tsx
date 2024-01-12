@@ -1,7 +1,6 @@
-import { Form, Image, Input, Modal, Table } from "antd";
+import { Image, Table } from "antd";
 import Search from "antd/es/input/Search";
 import { ColumnsType } from "antd/es/table";
-import { IoMdAdd } from "react-icons/io";
 
 const BorrowerAccounts = ({
   showPassword,
@@ -9,12 +8,11 @@ const BorrowerAccounts = ({
   setSearchText,
   borrowers,
   activeTabKey1,
-  approveBorrower,
 }: any) => {
   const columns: ColumnsType<any> = [
     {
       title: "ID",
-      dataIndex: "id",
+      dataIndex: "borrowerIdNo",
     },
     activeTabKey1 === "pending"
       ? {
