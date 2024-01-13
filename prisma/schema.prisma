@@ -6,7 +6,7 @@ generator client {
 }
 
 datasource db {
-    provider = "sqlite"
+    provider = "postgres"
     url      = env("DATABASE_URL")
 }
 
@@ -67,20 +67,21 @@ model LoanPlans {
 }
 
 model Payment {
-    id        Int      @id @default(autoincrement())
-    amount    Float
-    penalty   Float
+    id        Int       @id @default(autoincrement())
+    penalty   Boolean?
+    datePaid  DateTime?
     loanId    Int
-    month     String
-    Loan      Loans    @relation(fields: [loanId], references: [id])
-    createdAt DateTime @default(now())
-    updatedAt DateTime @updatedAt
+    deadline  DateTime
+    Loan      Loans     @relation(fields: [loanId], references: [id])
+    createdAt DateTime  @default(now())
+    updatedAt DateTime  @updatedAt
 }
 
 model Loans {
     id          Int       @id @default(autoincrement())
     amount      Float
     status      String
+    startDate   DateTime?
     borrowerId  Int
     referenceNo String
     Borrower    Borrower  @relation(fields: [borrowerId], references: [id])

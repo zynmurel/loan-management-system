@@ -1,3 +1,4 @@
+import dayjs from "dayjs";
 import { z } from "zod";
 
 import { createTRPCRouter, publicProcedure } from "~/server/api/trpc";
@@ -150,8 +151,8 @@ export const loanRouter = createTRPCRouter({
         status: z.string(),
       }),
     )
-    .mutation(({ ctx, input }) => {
-      return ctx.db.loans.update({
+    .mutation(async ({ ctx, input }) => {
+      return await ctx.db.loans.update({
         where: {
           id: input.id,
         },
@@ -159,5 +160,51 @@ export const loanRouter = createTRPCRouter({
           status: input.status,
         },
       });
+    }),
+  changeLoanToActive: publicProcedure
+    .input(
+      z.object({
+        id: z.number(),
+        months: z.number(),
+      }),
+    )
+    .mutation(async ({ ctx, input }) => {
+      const dateNow = dayjs();
+      return await ctx.db.loans
+        .update({
+          where: {
+            id: input.id,
+          },
+          data: {
+            status: "active",
+            startDate: dateNow.toDate(),
+          },
+        })
+        .then(async (data) => {
+          type PaymentType = {
+            penalty: boolean;
+            loanId: number;
+            deadline: Date;
+          }[];
+          const payments: PaymentType = [];
+          for (let x = 1; x <= input.months; x++) {
+            payments.push({
+              penalty: false,
+              loanId: data.id,
+              deadline: dateNow.add(x, "month").toDate(),
+            });
+          }
+          return await ctx.db.payment
+            .createMany({
+              data: [...payments],
+              skipDuplicates: true, // Skip 'Bobo'
+            })
+            .then((data) => {
+              return {
+                data,
+                message: "success",
+              };
+            });
+        });
     }),
 });

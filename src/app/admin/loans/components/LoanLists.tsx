@@ -19,6 +19,7 @@ const LoanLists = ({
           width={10}
           className=" flex-none"
           size="large"
+          defaultValue={searchTextIndex}
           placeholder="Search Loan Reference Number"
           onSearch={(e) => setSearchTextIndex(e)}
           onChange={(e) => {

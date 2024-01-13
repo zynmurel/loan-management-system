@@ -5,6 +5,11 @@ import toast from "react-hot-toast";
 import { IoMdAdd } from "react-icons/io";
 import { createContext } from "react";
 import { api } from "~/trpc/react";
+import {
+  getMonthlyOverduePenalty,
+  getMonthlyPayableAmount,
+  getTotalPayableAmount,
+} from "~/app/_utils/helpers/paymentComputations";
 
 export const LoanContext = createContext<any>({});
 
@@ -12,7 +17,7 @@ const LoansLayout = ({ children }: { children: React.ReactNode }) => {
   const [form] = Form.useForm();
   const [searchText, setSearchText] = useState("");
   const [addModal, setAddModal] = useState(false);
-  const [activeTabKey1, setActiveTabKey1] = useState<string>("approved");
+  const [activeTabKey1, setActiveTabKey1] = useState<string>("active");
   const [searchTextIndex, setSearchTextIndex] = useState("");
 
   const { data: loan_types } = api.loans.getAllLoanTypes.useQuery();
@@ -28,7 +33,6 @@ const LoansLayout = ({ children }: { children: React.ReactNode }) => {
         toast.success("Loan added! (Approved Loans)");
       },
     });
-
   const { data: loans, refetch: refetchLoans } =
     api.loans.getLoanByStatus.useQuery({
       searchText: searchTextIndex,
@@ -66,30 +70,6 @@ const LoansLayout = ({ children }: { children: React.ReactNode }) => {
   );
 
   const checker = !!amountChecker && !!loanPlanChecker;
-
-  const getTotalPayableAmount = (amount: number, interest: number) => {
-    return (amount + (interest / 100) * amount).toFixed(2);
-  };
-
-  const getMonthlyPayableAmount = (
-    amount: number,
-    interest: number,
-    months: number,
-  ) => {
-    return ((amount + (interest / 100) * amount) / months).toFixed(2);
-  };
-
-  const getMonthlyOverduePenalty = (
-    amount: number,
-    interest: number,
-    months: number,
-    penalty: number,
-  ) => {
-    return (
-      ((amount + (interest / 100) * amount) / months) *
-      (penalty / 100)
-    ).toFixed(2);
-  };
 
   const values = {
     loans,
