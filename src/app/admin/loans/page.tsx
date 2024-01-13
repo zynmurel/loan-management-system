@@ -11,6 +11,7 @@ import {
   getMonthlyPayableAmount,
   getTotalPayableAmount,
 } from "~/app/_utils/helpers/paymentComputations";
+import { useRouter } from "next/navigation";
 
 const tabList = [
   {
@@ -40,6 +41,7 @@ const Loans = () => {
     setActiveTabKey1,
     refetchLoans,
   } = useContext(LoanContext);
+  const router = useRouter();
   const [openModal, setOpenModal] = useState<any>({
     type: null,
     data: null,
@@ -62,6 +64,7 @@ const Loans = () => {
 
   const onTab1Change = (key: string) => {
     setActiveTabKey1(key);
+    setSearchTextIndex("");
   };
 
   const onChangeLoanStatus = (id: number, status: string) => {
@@ -134,7 +137,7 @@ const Loans = () => {
           },
         }
       : {},
-    activeTabKey1 === "approved"
+    activeTabKey1 === "approved" || activeTabKey1 === "active"
       ? {
           title: "Loan Details",
           render: (data) => {
@@ -200,15 +203,42 @@ const Loans = () => {
           </button>,
           activeTabKey1 === "approved" ? (
             <button
-              className=" mx-1 rounded bg-green-500 px-3 py-1 text-white"
+              className=" mx-1 rounded border border-green-500 bg-green-100 px-3 py-1 text-green-600 hover:brightness-95"
               onClick={() =>
                 setLoanActive({
                   id: openModal.data.id,
                   months: openModal.data.LoanPlan.planMonth,
+                  monthlyAmount: parseFloat(
+                    getMonthlyPayableAmount(
+                      openModal.data.amount,
+                      openModal.data.LoanPlan.interest,
+                      openModal.data.LoanPlan.planMonth,
+                    ),
+                  ),
+                  monthlyPenalty: parseFloat(
+                    getMonthlyOverduePenalty(
+                      openModal.data.amount,
+                      openModal.data.LoanPlan.interest,
+                      openModal.data.LoanPlan.planMonth,
+                      openModal.data.LoanPlan.penalty,
+                    ),
+                  ),
                 })
               }
             >
               Start Loan
+            </button>
+          ) : (
+            <></>
+          ),
+          activeTabKey1 === "active" ? (
+            <button
+              className=" mx-1 rounded bg-green-500 px-2 py-1 text-white"
+              onClick={() => {
+                router.push(`/admin/payment/${openModal.data.referenceNo}`);
+              }}
+            >
+              Proceed to Payment
             </button>
           ) : (
             <></>

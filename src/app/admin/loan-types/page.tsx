@@ -73,7 +73,7 @@ const LoanType = () => {
       id: activeLoanType.data.id,
     });
   };
-  const columns: ColumnsType<DataType> = [
+  const columns: ColumnsType<any> = [
     {
       title: "Name",
       dataIndex: "name",
@@ -185,8 +185,8 @@ const LoanType = () => {
                 {activeLoanType.data.Loans.length ? (
                   <div className=" flex flex-col">
                     <div>
-                      You cant delete Loan Types that is already connected to
-                      other loans?
+                      You can't delete Loan Types that is already connected to
+                      other loans
                     </div>
                     <div className=" mt-3 flex flex-row gap-2">
                       <button

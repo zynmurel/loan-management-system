@@ -15,9 +15,7 @@ import {
   FaUsersCog,
 } from "react-icons/fa";
 import { api } from "~/trpc/react";
-import { RecoilRoot, useRecoilValue, useSetRecoilState } from "recoil";
-import { activeAdminData } from "../atoms/activeAdmin";
-import { useEffect } from "react";
+import { RecoilRoot } from "recoil";
 
 const siderTitle = "Loan Management System";
 const getSiderItems = (isSuper: boolean) => {
@@ -105,6 +103,9 @@ const AdminLayout = ({ children }: { children: React.ReactNode }) => {
     },
   ];
   const findTitle = () => {
+    if (pathname.includes("/admin/payment/")) {
+      return `Payment - Loan Ref No. ${pathname.slice(15)}`;
+    }
     const active = siderItems.find((data) => data.url === pathname);
     return active?.title || "";
   };
@@ -139,7 +140,7 @@ const AdminLayout = ({ children }: { children: React.ReactNode }) => {
               </div>
             </Dropdown>
           </Header>
-          <Content className=" flex  p-4">{children}</Content>
+          <Content className=" flex p-4">{children}</Content>
         </Layout>
       </div>
     </RecoilRoot>

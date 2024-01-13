@@ -166,6 +166,8 @@ export const loanRouter = createTRPCRouter({
       z.object({
         id: z.number(),
         months: z.number(),
+        monthlyAmount: z.number(),
+        monthlyPenalty: z.number(),
       }),
     )
     .mutation(async ({ ctx, input }) => {
@@ -185,6 +187,8 @@ export const loanRouter = createTRPCRouter({
             penalty: boolean;
             loanId: number;
             deadline: Date;
+            penaltyValue: number;
+            amountValue: number;
           }[];
           const payments: PaymentType = [];
           for (let x = 1; x <= input.months; x++) {
@@ -192,6 +196,8 @@ export const loanRouter = createTRPCRouter({
               penalty: false,
               loanId: data.id,
               deadline: dateNow.add(x, "month").toDate(),
+              penaltyValue: input.monthlyPenalty,
+              amountValue: input.monthlyAmount,
             });
           }
           return await ctx.db.payment

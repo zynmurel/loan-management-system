@@ -67,14 +67,16 @@ model LoanPlans {
 }
 
 model Payment {
-    id        Int       @id @default(autoincrement())
-    penalty   Boolean?
-    datePaid  DateTime?
-    loanId    Int
-    deadline  DateTime
-    Loan      Loans     @relation(fields: [loanId], references: [id])
-    createdAt DateTime  @default(now())
-    updatedAt DateTime  @updatedAt
+    id           Int       @id @default(autoincrement())
+    penalty      Boolean
+    datePaid     DateTime?
+    penaltyValue Float
+    amountValue  Float
+    loanId       Int
+    deadline     DateTime
+    Loan         Loans     @relation(fields: [loanId], references: [id])
+    createdAt    DateTime  @default(now())
+    updatedAt    DateTime  @updatedAt
 }
 
 model Loans {

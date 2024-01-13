@@ -218,7 +218,7 @@ const LoanPlan = () => {
                   <div className=" flex flex-col">
                     <div>
                       You can't delete Loan Plans that is already connected to
-                      other loans?
+                      other loans
                     </div>
                     <div className=" text-orange-600">{`Loans related to this plan : ${activeLoanPlan.data.Loans.length}`}</div>
                     <div className=" mt-3 flex flex-row gap-2">
@@ -265,7 +265,7 @@ const LoanPlan = () => {
                   <div className=" flex flex-col">
                     <div>
                       You can't edit Loan Plans that is already connected to
-                      other loans?
+                      other loans
                     </div>
                     <div className=" text-orange-600">{`Loans related to this plan : ${activeLoanPlan.data.Loans.length}`}</div>
                     <div className=" mt-3 flex flex-row gap-2">

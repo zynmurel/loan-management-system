@@ -6,13 +6,15 @@ import {
   FaBook,
   FaChevronRight,
 } from "react-icons/fa";
+import { api } from "~/trpc/react";
 const AdminHome = () => {
+  const { data } = api.home.getHomeDatas.useQuery();
   const router = useRouter();
   const dashboardDetails = [
     {
       title: "Active Loans",
       color: "#517DF6",
-      data: "0",
+      data: `${data?.loans || 0}`,
       icon: <FaCommentDollar />,
       link: "/admin/loans",
       linkText: "View Loans",
@@ -20,15 +22,15 @@ const AdminHome = () => {
     {
       title: "Payments Today",
       color: "#3EB952",
-      data: "P 0.00",
+      data: `₱ ${data?.payments?.toFixed(2) || 0.0}`,
       icon: <FaCoins />,
-      link: "/admin/payments",
+      link: "/admin/payment",
       linkText: "View Payments",
     },
     {
       title: "Borrowers",
       color: "#40BCBC",
-      data: "0",
+      data: `${data?.borrowers || 0}`,
       icon: <FaBook />,
       link: "/admin/borrowers",
       linkText: "View Borrowers",
