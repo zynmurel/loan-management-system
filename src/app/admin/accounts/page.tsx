@@ -265,7 +265,7 @@ const AdminAccountsPage = () => {
       >
         {activeAdmin?.data &&
           (activeAdmin?.data.type === "super_admin" ||
-            activeAdmin?.data.id == adminId ? (
+          activeAdmin?.data.id == adminId ? (
             <div>You can't delete Super Admin Account</div>
           ) : (
             <div>
@@ -348,7 +348,7 @@ const AdminAccountsPage = () => {
             className=" flex flex-row items-center gap-3 rounded bg-green-500 p-2 px-5 text-base text-white shadow-md hover:brightness-110"
           >
             <IoMdAdd className={"text-2xl"} />
-            Add New Account
+            Add New Admin
           </button>
         </div>
         <div className=" flex min-h-96 flex-col rounded  bg-white">
