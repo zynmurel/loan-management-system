@@ -1,6 +1,3 @@
-import { TRPCError } from "@trpc/server";
-import dayjs from "dayjs";
-import { text } from "stream/consumers";
 import { z } from "zod";
 
 import { createTRPCRouter, publicProcedure } from "~/server/api/trpc";
@@ -25,6 +22,9 @@ export const paymentRouter = createTRPCRouter({
             Borrower: true,
           },
           take: 10,
+          orderBy: {
+            referenceNo: "asc",
+          },
         })
         .then((data) => {
           return data.map((dt) => {

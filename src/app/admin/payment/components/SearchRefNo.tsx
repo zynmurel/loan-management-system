@@ -2,6 +2,7 @@ import { Select } from "antd";
 import dayjs from "dayjs";
 import { useRouter } from "next/navigation";
 import { IoMdSearch } from "react-icons/io";
+import { PesoFormat } from "~/app/_utils/helpers/phpFormatter";
 
 const SearchRefPage = ({
   searchRefNo,
@@ -93,7 +94,7 @@ const SearchRefPage = ({
                     <span>Loan Amount :</span>
                     {"  "}
                     <span className=" font-bold">
-                      {`₱ ${selectedLoan.amount.toFixed(0)}`}
+                      {` ${PesoFormat.format(selectedLoan.amount)}`}
                     </span>
                   </div>
                   <div className=" font-base text-base text-gray-600">
