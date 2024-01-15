@@ -14,8 +14,9 @@ import {
   FaCreditCard,
   FaUsersCog,
 } from "react-icons/fa";
-import { api } from "~/trpc/react";
+import { RiGitRepositoryFill } from "react-icons/ri";
 import { RecoilRoot } from "recoil";
+import { api } from "~/trpc/react";
 
 const siderTitle = "Loan Management System";
 const getSiderItems = (isSuper: boolean) => {
@@ -55,6 +56,12 @@ const getSiderItems = (isSuper: boolean) => {
       title: "Loan Types",
       url: "/admin/loan-types",
       key: "loan-types",
+    },
+    {
+      icon: <RiGitRepositoryFill />,
+      title: "Reports",
+      url: "/admin/report",
+      key: "reports",
     },
     isSuper && {
       icon: <FaUsersCog />,
@@ -112,7 +119,7 @@ const AdminLayout = ({ children }: { children: React.ReactNode }) => {
   return (
     <RecoilRoot>
       <div className=" flex min-h-screen w-full flex-row items-center justify-center">
-        <div className=" flex min-h-screen w-72 flex-col items-center  bg-blue-500 p-5">
+        <div className=" flex min-h-screen min-w-64 max-w-64 flex-col items-center  bg-blue-500 p-5">
           <MenuSider siderItems={siderItems} siderTitle={siderTitle} />
         </div>
         <Layout className=" min-h-screen">

@@ -27,7 +27,6 @@ export const homeRouter = createTRPCRouter({
         amountValue: true,
       },
     });
-
     const thisDayPenaltySum = await ctx.db.payment.aggregate({
       where: {
         AND: [

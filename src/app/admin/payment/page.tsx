@@ -10,10 +10,10 @@ const tabList = [
     key: "pay",
     tab: <div className="px-2">Pay</div>,
   },
-  {
-    key: "list",
-    tab: "Payment List",
-  },
+  // {
+  //   key: "list",
+  //   tab: "Payment List",
+  // },
 ];
 const PaymentPage = () => {
   const [activeTabKey1, setActiveTabKey1] = useState<string>("pay");

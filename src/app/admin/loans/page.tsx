@@ -152,6 +152,22 @@ const Loans = () => {
           },
         }
       : {},
+    activeTabKey1 === "done"
+      ? {
+          title: "Loan Details",
+          dataIndex: "referenceNo",
+          render: (data) => {
+            return (
+              <button
+                onClick={() => router.push(`/admin/payment/${data}`)}
+                className=" rounded border border-green-500 bg-green-500 px-2 py-0.5 text-white hover:brightness-105"
+              >
+                Proceed to Loan Details
+              </button>
+            );
+          },
+        }
+      : {},
   ];
   const LoanListTemplate = () => (
     <LoanLists
