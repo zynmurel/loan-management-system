@@ -118,7 +118,7 @@ const AdminLayout = ({ children }: { children: React.ReactNode }) => {
   };
   return (
     <RecoilRoot>
-      <div className=" flex min-h-screen w-full flex-row items-center justify-center">
+      <div className=" flex min-h-screen w-full flex-row justify-center">
         <div className=" flex min-h-screen min-w-64 max-w-64 flex-col items-center  bg-blue-500 p-5">
           <MenuSider siderItems={siderItems} siderTitle={siderTitle} />
         </div>

@@ -45,7 +45,7 @@ const PaymentByLoanPage = ({ params: { id } }: { params: { id: string } }) => {
     }) || [];
   const columns: ColumnsType<any> = [
     {
-      title: "For the Month of",
+      title: "Month",
       dataIndex: "month",
       render: (data) => (
         <div className=" text-lg font-medium uppercase text-gray-700">
@@ -53,23 +53,23 @@ const PaymentByLoanPage = ({ params: { id } }: { params: { id: string } }) => {
         </div>
       ),
     },
-    {
-      title: "Action",
-      dataIndex: "index",
-      width: 200,
-      align: "center",
-      render: (_, data) => {
-        return (
-          <button
-            onClick={() => setPaymentData(data)}
-            disabled={_ !== 0}
-            className={`rounded bg-green-500 p-1 px-5 text-white hover:brightness-105 disabled:bg-gray-200`}
-          >
-            Pay
-          </button>
-        );
-      },
-    },
+    // {
+    //   title: "Action",
+    //   dataIndex: "index",
+    //   width: 200,
+    //   align: "center",
+    //   render: (_, data) => {
+    //     return (
+    //       <button
+    //         onClick={() => setPaymentData(data)}
+    //         disabled={_ !== 0}
+    //         className={`rounded bg-green-500 p-1 px-5 text-white hover:brightness-105 disabled:bg-gray-200`}
+    //       >
+    //         Pay
+    //       </button>
+    //     );
+    //   },
+    // },
   ];
   const columnsPaid: ColumnsType<any> = [
     {
@@ -130,19 +130,13 @@ const PaymentByLoanPage = ({ params: { id } }: { params: { id: string } }) => {
       {loan ? (
         <div className="flex flex-col gap-2">
           <div className=" flex-1 rounded bg-white p-3 px-6 text-gray-600 shadow">
-            <div className=" flex flex-row items-center text-xl font-medium text-emerald-600">
-              ID {loan.Borrower?.borrowerIdNo}{" "}
+            <div className=" -mb-1 mt-1 flex flex-row items-center text-2xl font-medium uppercase text-cyan-700">
+              LOAN PLAN - {loan.LoanType?.name}{" "}
               <span
                 className={`${
                   loan.status === "done" ? "text-cyan-500" : " text-green-500"
                 } pl-1 text-base uppercase`}
               >{`( ${loan.status} )`}</span>
-            </div>
-            <div className=" text-4xl font-medium uppercase ">
-              {`${loan.Borrower?.firstName} ${loan.Borrower?.middleName} ${loan.Borrower?.lastName}`}
-            </div>
-            <div className=" -mb-1 mt-1 text-2xl font-medium uppercase text-cyan-700">
-              LOAN PLAN - {loan.LoanType?.name}
             </div>
             <div className=" text-base font-medium text-cyan-700">
               {loan.LoanPlan?.planMonth} Months , {loan.LoanPlan?.interest}%
@@ -163,7 +157,7 @@ const PaymentByLoanPage = ({ params: { id } }: { params: { id: string } }) => {
           <div className=" flex flex-1 flex-col gap-5 rounded bg-white p-3 px-6 text-gray-600 shadow">
             <div className=" flex flex-col items-center justify-center">
               <div className=" mb-2 text-xl font-medium uppercase text-gray-500">
-                Payment
+                Payment Details
               </div>
               <div className=" flex flex-row gap-3">
                 <div className=" flex flex-row">
@@ -199,7 +193,7 @@ const PaymentByLoanPage = ({ params: { id } }: { params: { id: string } }) => {
             </div>
             <div className="flex flex-row gap-3">
               {loan.status === "active" ? (
-                <div className=" flex-1 rounded-md bg-green-500 p-2 text-white shadow-sm">
+                <div className=" w-1/3 rounded-md bg-green-500 p-2 text-white shadow-sm">
                   <div className=" mb-2 text-xl font-bold">To Pay</div>
                   <div className=" overflow-hidden rounded-md">
                     <Table

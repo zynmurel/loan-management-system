@@ -10,6 +10,8 @@ import { loanRouter } from "./routers/loans";
 import { homeRouter } from "./routers/home";
 import { paymentRouter } from "./routers/payment";
 import { paymentIdRouter } from "./routers/payment-id";
+import { borrowerLoansRouter } from "./routers/borrower_loan";
+import { reportsRouter } from "./routers/reports";
 
 /**
  * This is the primary router for your server.
@@ -28,6 +30,8 @@ export const appRouter = createTRPCRouter({
   home: homeRouter,
   payment: paymentRouter,
   payment_id: paymentIdRouter,
+  borrower_loan: borrowerLoansRouter,
+  reports: reportsRouter,
 });
 
 // export type definition of API

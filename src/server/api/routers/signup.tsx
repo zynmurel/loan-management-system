@@ -37,10 +37,12 @@ export const signUpRouter = createTRPCRouter({
           message: "This email or contact number is already used",
         });
       } else {
+        const randomId = Math.floor(100000000 + Math.random() * 900000000);
         return await ctx.db.borrower.create({
           data: {
             ...input,
             status: "pending",
+            borrowerIdNo: randomId.toString(),
           },
         });
       }

@@ -1,35 +1,13 @@
 "use client";
 import { Button, Dropdown, Layout, MenuProps } from "antd";
 import { Content, Header } from "antd/es/layout/layout";
-import MenuSider from "../_components/sider";
-import { usePathname, useRouter } from "next/navigation";
-import {
-  FaHome,
-  FaCommentDollar,
-  FaCoins,
-  FaBook,
-  FaPiggyBank,
-  FaCreditCard,
-  FaUsersCog,
-  FaUser,
-} from "react-icons/fa";
+import { useRouter } from "next/navigation";
+import { FaUsersCog } from "react-icons/fa";
 
-const siderTitle = "Loan Management System";
-const siderItems = [
-  {
-    icon: <FaHome />,
-    title: "Home",
-    url: "/borrower",
-    key: "borrower",
-  },
-];
-const headerContent = {
-  title: "Borrower",
-  icon: <FaUser />,
-};
 const BorrowerLayout = ({ children }: { children: React.ReactNode }) => {
   const router = useRouter();
-  const pathname = usePathname();
+  const id = localStorage.getItem("userId");
+
   const logout = async () => {
     const clearstorage = async () => {
       return await localStorage.clear();
@@ -49,19 +27,16 @@ const BorrowerLayout = ({ children }: { children: React.ReactNode }) => {
       ),
     },
   ];
-  const findTitle = () => {
-    const active = siderItems.find((data) => data.url === pathname);
-    return active?.title || "";
+  const headerContent = {
+    title: "Borrower",
+    icon: <FaUsersCog />,
   };
   return (
     <div className=" flex min-h-screen w-full flex-row items-center justify-center">
-      <div className=" flex min-h-screen w-72 flex-col items-center  bg-blue-500 p-5">
-        <MenuSider siderItems={siderItems} siderTitle={siderTitle} />
-      </div>
       <Layout className=" min-h-screen">
-        <Header className="flex flex-1 items-center justify-between  bg-white px-3 shadow-lg">
-          <div className=" px-3 text-xl font-semibold text-gray-600">
-            {findTitle()}
+        <Header className="flex flex-1 items-center justify-between  bg-blue-500 px-3 text-white shadow-lg">
+          <div className=" px-3 text-xl font-semibold text-white">
+            LOAN MANAGEMENT SYSTEM
           </div>
           <Dropdown
             menu={{ items }}
@@ -69,13 +44,15 @@ const BorrowerLayout = ({ children }: { children: React.ReactNode }) => {
             placement="bottomRight"
             arrow
           >
-            <div className=" flex h-10 cursor-pointer items-center justify-center gap-2 rounded border border-gray-200 p-2 text-lg text-gray-800 hover:bg-slate-200 ">
+            <div className=" flex h-10 cursor-pointer items-center justify-center gap-2 rounded border border-gray-50 p-2 text-lg text-white hover:bg-slate-200 ">
               <div>{headerContent.title}</div>
               <div className=" text-2xl">{headerContent.icon}</div>
             </div>
           </Dropdown>
         </Header>
-        <Content className=" p-4">{children}</Content>
+        <Content className=" flex w-full justify-center p-4">
+          <div className=" w-10/12">{children}</div>
+        </Content>
       </Layout>
     </div>
   );
