@@ -193,8 +193,10 @@ const PaymentByLoanPage = ({ params: { id } }: { params: { id: string } }) => {
             </div>
             <div className="flex flex-row gap-3">
               {loan.status === "active" ? (
-                <div className=" w-1/3 rounded-md bg-green-500 p-2 text-white shadow-sm">
-                  <div className=" mb-2 text-xl font-bold">To Pay</div>
+                <div className=" w-1/3 rounded-md bg-green-300 p-2 text-white shadow-sm">
+                  <div className=" mb-2 flex w-full items-center justify-center text-xl font-bold">
+                    To Pay
+                  </div>
                   <div className=" overflow-hidden rounded-md">
                     <Table
                       size="large"
